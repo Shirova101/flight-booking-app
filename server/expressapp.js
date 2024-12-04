@@ -1,19 +1,23 @@
 const express = require("express");
 const app = express();
-const cookieParser = require("cookie-parser");
+const cors = require('cors');
 const errorMiddleware = require("./middleware/error");
+app.use(cors());
 
 app.use(express.json());
-app.use(cookieParser());
-// Route IMPORTS
-//const product = require("./routes/productRoute");
-//const user = require("./routes/userRoute");
-//const order = require("./routes/orderRoute");
 
-//app.use("/api/v1" , product);
-//app.use("/api/v1", user);
-//app.use("/api/v1", order);
-// Middleware for ERRORS
+// Route IMPORTS
+const booking = require("./routes/bookingRoute");
+const flights = require("./routes/flightRoute");
+
+// API Route Definitions
+// Booking Routes
+app.use("/api/v1/bookings", booking);
+
+// Flight Routes
+app.use("/api/v1/flights", flights);
+
+// Middleware for ERRORS_____LAST
 
 app.use(errorMiddleware);
 

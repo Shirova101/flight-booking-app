@@ -30,7 +30,9 @@ module.exports = (err,req,res,next) => { // next is call back function which is 
         err = new ErrorHandler(message, 400); // 400 : bad request 
     }
 
-
+    console.error(`Error: ${err.message}\nStatus Code: ${err.statusCode || 500}\nStack: ${err.stack}`);
+    
+    
     res.status(err.statusCode).json({
         success : false,
         error : err.message,

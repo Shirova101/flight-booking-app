@@ -1,4 +1,4 @@
-const app = require("./app");
+const app = require("./expressapp");
 const dotenv = require("dotenv");
 const connectDatabase = require("./config/database");
 
@@ -13,7 +13,7 @@ process.on("uncaughtException", err=>{
 
 // Config
 
-dotenv.config({path: "backend/config/config.env"});
+dotenv.config({path: "server/config/config.env"});
 
 // connecting database
 
