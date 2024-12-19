@@ -36,13 +36,14 @@ const checkInSlice = createSlice({
     },
     fetchBookingSuccess(state, action) {
       console.log(action.payload);
-      state.loading = false;
       state.bookingDetails = action.payload;
+  
+        
       state.primaryPassenger = action.payload.passengers.find((p) => p.isPrimary) || null;
-      state.passengerDetails = [...action.payload.passengers];
       // Initialize add-ons from backend response
       state.outboundAddOns = action.payload.flightDetails?.addOnsSelected || state.outboundAddOns;
       state.returnAddOns = action.payload.returnFlightDetails?.addOnsSelected || state.returnAddOns;
+      state.loading = false;
     },
     fetchBookingFailure(state, action) {
       state.loading = false;
@@ -88,13 +89,14 @@ const checkInSlice = createSlice({
       state.error = null;
     },
     modifyBookingSuccess(state, action) {
-      state.loading = false;
+      
       state.bookingDetails = action.payload.updatedDetails; // Assuming updated details are returned
       state.bookingModified = true; // Set booking as modified
       state.primaryPassenger = action.payload.updatedDetails.passengers.find((p) => p.isPrimary) || null;
       // Update add-ons in state after modification
       state.outboundAddOns = action.payload.updatedDetails.flightDetails?.addOnsSelected || state.outboundAddOns;
-      state.returnAddOns = action.payload.updateDetails.returnFlightDetails?.addOnsSelected || state.returnAddOns;
+      state.returnAddOns = action.payload.updatedDetails.returnFlightDetails?.addOnsSelected || state.returnAddOns;
+      state.loading = false;
     },
     modifyBookingFailure(state, action) {
       state.loading = false;
@@ -120,6 +122,7 @@ export const {
   modifyBookingRequest,
   modifyBookingSuccess,
   modifyBookingFailure,
+  addPassengerDetail,
   updatePassengerDetail,
   resetBookingModification,
 } = checkInSlice.actions;

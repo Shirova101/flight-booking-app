@@ -3,7 +3,8 @@ import { View, Text, Button, StyleSheet, Alert, ActivityIndicator } from 'react-
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { setLoading, setPaymentStatus, setPNR } from '../redux/slices/guestSlice';
+import { setLoading, setPaymentStatus, setPNR } from '../../redux/slices/guestSlice';
+import styles from '../../styles/pages/flightBooking/PaymentPortal.styles';
 
 const BASE_URL = 'http://localhost:4000/api/v1';
 
@@ -111,7 +112,7 @@ const PaymentPortal = () => {
   const handlePaymentFailure = () => {
     dispatch(setPaymentStatus({ status: 'Failed' }));
     Alert.alert('Payment Failed', 'Your payment process was not successful. Please try again.');
-    navigate('/payment'); // Navigate back to the payment page
+    navigate('/payment-page'); // Navigate back to the payment page
   };
 
   
@@ -148,39 +149,5 @@ const PaymentPortal = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: '#fff',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  header: {
-    fontSize: 24,
-    marginBottom: 20,
-    fontWeight: 'bold',
-  },
-  subheader: {
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '60%',
-  },
-  successMessage: {
-    marginTop: 20,
-    color: 'green',
-    fontSize: 16,
-  },
-  errorMessage: {
-    marginTop: 20,
-    color: 'red',
-    fontSize: 16,
-  },
-});
 
 export default PaymentPortal; 

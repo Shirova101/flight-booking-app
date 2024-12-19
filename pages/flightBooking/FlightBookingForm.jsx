@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Picker, StyleSheet } from 'react-native';
-import CustomDatePicker from './CustomDatePicker';
+import CustomDatePicker from '../../components/CustomDatePicker';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addPassengerDetail, setFlightSelection, setPassengerInfo, setPrimaryPassenger } from '../redux/slices/guestSlice';
-import { setSearchCriteria } from '../redux/slices/flightSlice';
+import { addPassengerDetail, setFlightSelection, setPassengerInfo, setPrimaryPassenger } from '../../redux/slices/guestSlice';
+import { setSearchCriteria } from '../../redux/slices/flightSlice';
+import FormField from '../../components/FormField';
+import styles from '../../styles/pages/flightBooking/FlightBookingForm.styles'
+
 
 const FlightBookingForm = () => {
   const dispatch = useDispatch();
@@ -121,137 +124,80 @@ const FlightBookingForm = () => {
     <View style={styles.formContainer}>
       <Text style={styles.formTitle}>Flight Booking</Text>
 
+      
       {/* Flight Type */}
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Flight Type:</Text>
-        <Picker
-          selectedValue={flightType}
-          style={styles.picker}
-          onValueChange={handleFlightTypeChange}
-        >
-          <Picker.Item label="One-way" value="oneWay" />
-          <Picker.Item label="Round-trip" value="twoWay" />
-        </Picker>
-      </View>
-
+      <FormField
+        label="Flight Type"
+        type="picker"
+        value={flightType}
+        onChange={handleFlightTypeChange}
+        options={[
+          { label: 'One-way', value: 'oneWay' },
+          { label: 'Round-trip', value: 'twoWay' },
+        ]}
+      />
       {/* From Location */}
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>From:</Text>
-        <Picker
-          selectedValue={fromLocation}
-          style={styles.picker}
-          onValueChange={setFromLocation}
-        >
-          <Picker.Item label="Select departure station" value="" />
-          {stations.map((station) => (
-            <Picker.Item key={station.id} label={`${station.name} (${station.id})`} value={station.name} />
-          ))}
-        </Picker>
-      </View>
+      {stations && <FormField
+        label="From"
+        type="stations-picker"
+        value={fromLocation}
+        onChange={setFromLocation}
+        stations={stations}
+      />}
 
       {/* To Location */}
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>To:</Text>
-        <Picker
-          selectedValue={toLocation}
-          style={styles.picker}
-          onValueChange={setToLocation}
-        >
-          <Picker.Item label="Select destination station" value="" />
-          {stations.map((station) => (
-            <Picker.Item key={station.id} label={`${station.name} (${station.id})`}  value={station.name} />
-          ))}
-        </Picker> 
-      </View>
+      {stations && <FormField
+        label="From"
+        type="stations-picker"
+        value={toLocation}
+        onChange={setToLocation}
+        stations={stations}
+      />}
 
       {/* Departure Date */}
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Departure Date:</Text>
-        <CustomDatePicker date={UFdepartureDate} onDateChange={setUFDepartureDate} />
-      </View>
-
+      <FormField
+        label="Departure Date"
+        type="date"
+        value={UFdepartureDate}
+        onChange={setUFDepartureDate}
+      />
       {/* Return Date */}
-      {showReturnDate && (
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Return Date:</Text>
-          <CustomDatePicker date={UFreturnDate} onDateChange={setUFReturnDate} />
-        </View>
-      )}
+      {showReturnDate && <FormField
+        label="Return Date"
+        type="date"
+        value={UFreturnDate}
+        onChange={setUFReturnDate}
+      />}
 
       {/* Number of Passengers */}
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Adults:</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          value={String(adults)}
-          onChangeText={(value) => setAdults(Number(value))}
-        />
-      </View>
+      <FormField
+        label="Adults"
+        type="number"
+        value={adults}
+        onChange={(value) =>setAdults(Number(value))}
+      />
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Children:</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          value={String(children)}
-          onChangeText={(value) => setChildren(Number(value))}
-        />
-      </View>
+      <FormField
+        label="Children"
+        type="number"
+        value={children}
+        onChange={(value) =>setChildren(Number(value))}
+      />
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Infants:</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          value={String(infants)}
-          onChangeText={(value) => setInfants(Number(value))}
-        />
-      </View>
+      <FormField
+        label="Infants"
+        type="number"
+        value={infants}
+        onChange={(value) =>setInfants(Number(value))}
+      />
 
       {/* Submit Button */}
-      <View style={styles.buttonWrapper}>
+      <View style={styles.button}>
         <Button title="Book Flight" onPress={handleBookingSubmit} />
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  formContainer: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-  },
-  formTitle: {
-    fontSize: 24,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  inputGroup: {
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 5,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    fontSize: 16,
-  },
-  picker: {
-    height: 50,
-    width: '100%',
-  },
-  buttonWrapper: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-});
 
 export default FlightBookingForm

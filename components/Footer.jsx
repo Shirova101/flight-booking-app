@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useNavigate } from 'react-router-dom';
-
+import styles from '../styles/components/Footer.styles';
 const steps = ['/passenger-details', '/add-ons', '/payment-page'];
 
 const Footer = ({ totalCost, isFlightSelected = true, current_step }) => {
@@ -25,20 +25,5 @@ const Footer = ({ totalCost, isFlightSelected = true, current_step }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  footer: {
-    padding: 20,
-    borderTopWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: '#f9f9f9',
-    flexDirection: 'row', // Align items horizontally
-    justifyContent: 'space-between', // Space between elements
-    alignItems: 'center', // Center vertically
-  },
-  totalCost: {
-    fontSize: 18,
-  },
-});
 
 export default Footer;

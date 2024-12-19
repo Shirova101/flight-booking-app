@@ -2,21 +2,22 @@ import React from 'react';
 import { ScrollView, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../styles/pages/checkIn/CheckInConfirmation.styles';
+import styles from '../../styles/pages/manageBooking/ChangeConfirmation.styles.js';
 
 import FlightCard from '../../components/FlightCard';
 import PassengerDisplay from '../../components/PassengerDisplay';
 import PaymentDisplay from '../../components/PaymentDisplay';
 
-const CheckInConfirmation = () => {
-  const { checkInSuccess, bookingDetails, passengerDetails, loading, error } = useSelector((state) => state.checkIn);
+const ChangeConfirmation = () => {
+  const { bookingModified, bookingDetails, passengerDetails, loading, error } = useSelector((state) => state.checkIn);
   const navigate = useNavigate();
 
-  // Safely access the properties of bookingDetails
+  // Adding safety checks to ensure bookingDetails and flightDetails are available
   const flightDetails = bookingDetails?.flightDetails;
   const returnFlightDetails = bookingDetails?.returnFlightDetails;
   const paymentDetails = bookingDetails?.payment;
 
+  // Check if bookingDetails or flightDetails are undefined or null
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -36,13 +37,13 @@ const CheckInConfirmation = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Check-In Confirmation</Text>
+      <Text style={styles.title}>Booking Change Confirmation</Text>
 
-      {/* Check-in Success or Failure Message */}
-      {checkInSuccess ? (
-        <Text style={styles.successMessage}>Check-In Successful!</Text>
+      {/* Booking Modified Success or Failure Message */}
+      {bookingModified ? (
+        <Text style={styles.successMessage}>Booking Modified Successfully!</Text>
       ) : (
-        <Text style={styles.failureMessage}>Check-In Failed. Please try again.</Text>
+        <Text style={styles.failureMessage}>Booking Modification Failed. Please try again.</Text>
       )}
 
       {/* Flight Details */}
@@ -71,7 +72,7 @@ const CheckInConfirmation = () => {
 
       {/* Passenger Details */}
       {passengerDetails ? (
-        <PassengerDisplay passengers={[passengerDetails]} />
+        <PassengerDisplay passengers={passengerDetails} />
       ) : (
         <Text style={styles.errorText}>Passenger details are not available</Text>
       )}
@@ -94,4 +95,4 @@ const CheckInConfirmation = () => {
   );
 };
 
-export default CheckInConfirmation;
+export default ChangeConfirmation;

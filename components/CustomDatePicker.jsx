@@ -11,7 +11,7 @@ const CustomDatePicker = ({ date, onDateChange }) => {
     newDate.setDate(newDate.getDate() + 1);
     setSelectedDate(newDate);
   };
-
+  
   const decrementDate = () => {
     const newDate = new Date(selectedDate);
     newDate.setDate(newDate.getDate() - 1);

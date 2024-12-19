@@ -8,13 +8,14 @@ import store  from './redux/store.js'; // Import your Redux store
 import SearchResults from './pages/flightBooking/SearchResults.js';
 import PassengerDetails from './pages/flightBooking/PassengerDetails.js';
 import PaymentPage from './pages/flightBooking/PaymentPage.js';
-import PaymentPortal from './components/PaymentPortal.jsx';
-import ConfirmationPage from './components/ConfirmationPage.jsx';
+import PaymentPortal from './pages/flightBooking/PaymentPortal.jsx';
+import ConfirmationPage from './pages/flightBooking/ConfirmationPage.jsx';
 import AddOnsPage from './pages/flightBooking/AddOnsPage.js';
 import CheckInDetails from './pages/checkIn/CheckInDetails.js';
 import CheckInConfirmation from './pages/checkIn/CheckInConfirmation.js';
 import ManageBooking from './pages/manageBooking/ManageBooking.js';
 import BookingChange from './pages/manageBooking/BookingChange.js';
+import ChangeConfirmation from './pages/manageBooking/ChangeConfirmation.js';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/checkIn-confirmation" element={<CheckInConfirmation />} />
           <Route path="/manage-booking" element={<ManageBooking />} />
           <Route path="/booking-change" element={<BookingChange />} />
+          <Route path="/change-confirmation" element={<ChangeConfirmation />} />
         </Routes>
       </Router>
     </Provider>

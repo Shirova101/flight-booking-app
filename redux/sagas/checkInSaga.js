@@ -10,6 +10,7 @@ import {
   modifyBookingRequest,
   modifyBookingSuccess,
   modifyBookingFailure,
+  addPassengerDetail,
 } from '../slices/checkInSlice';
 
 const BASE_URL = 'http://localhost:4000/api/v1';
@@ -31,7 +32,8 @@ function* fetchBookingSaga(action) {
     const response = yield call(axios.get, `${BASE_URL}/bookings/search`, {
       params: { PNR },
     });
-
+    
+    yield put(addPassengerDetail(response.data.data.passengers));
     yield put(fetchBookingSuccess(response.data.data));
   } catch (error) {
     yield put(fetchBookingFailure(getErrorMessage(error)));
@@ -47,9 +49,9 @@ function* modifyBookingSaga(action) {
       PNR,
       updatedDetails,
     });
-    response.data
     // Dispatch success action with the updated booking details
-    yield put(modifyBookingSuccess({ updatedDetails: response.data }));
+    
+    yield put(modifyBookingSuccess({ updatedDetails: response.data.data }));
   } catch (error) {
     // Handle any errors that occur during the API call
     const errorMessage = error.response?.data?.message || error.message;
@@ -64,14 +66,15 @@ function* checkInSaga(action) {
   try {
     const { PNR, flightType } = action.payload;
     const bookingDetails = yield select((state) => state.checkIn.bookingDetails);
-
+    
     // Check if outbound flight check-in is required
     if (!bookingDetails.CheckInCompleted) {
-      yield call(axios.post, `${BASE_URL}/bookings/checkin`, {
+      
+      yield call(axios.post, `${BASE_URL}/bookings/checkIn`, {
         PNR:PNR,
         flightType: 'outbound',
       });
-
+      
       // Update state for outbound flight check-in
       yield put(checkInSuccess());
       bookingDetails.CheckInCompleted = true;

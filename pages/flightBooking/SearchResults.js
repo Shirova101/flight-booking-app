@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFlightSelection, setTotalCost } from '../../redux/slices/guestSlice';
 import { setSelectedFlight, setSelectedReturnFlight } from '../../redux/slices/flightSlice';
 import ProgressHeader from '../../components/ProgressHeader';
 import Footer from '../../components/Footer';
+import styles from '../../styles/pages/flightBooking/SearchResults.styles'; // Import shared styles
+import { COLORS, FONT_SIZES, SPACING } from '../../styles/theme/theme'; // Import theme constants
+import FlightCard from '../../components/FlightCard';
 
 const SearchResults = () => {
   const dispatch = useDispatch();
   const guestData = useSelector((state) => state.guest); // Guest booking data
-  console.log(guestData.passengerDetails);
   const flights = useSelector((state) => state.flights.flights); // Outbound flights
   const returnFlights = useSelector((state) => state.flights.returnFlights); // Return flights
   const loading = useSelector((state) => state.flights.loading); // Loading state for flights
@@ -54,25 +56,12 @@ const SearchResults = () => {
       data={data}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
-        <TouchableOpacity
-          style={[
-            styles.flightItem,
-            (isReturn ? selectedReturnFlightId : selectedFlightId) === item.id && styles.selectedFlightItem,
-          ]}
-          onPress={() => isReturn ? handleSelectReturnFlight(item) : handleSelectOutboundFlight(item)}
-        >
-          <Text>Flight Number: {item.flightNumber}</Text>
-          <Text>From: {item.fromLocation}</Text>
-          <Text>To: {item.toLocation}</Text>
-          <Text>Departure Date: {item.departureTime}</Text>
-          {item.returnTime && <Text>Return Date: {item.returnTime}</Text>}
-          <Text>Price: ₹{item.totalFare}</Text>
-          <Text style={styles.selectText}>
-            {(isReturn ? selectedReturnFlightId : selectedFlightId) === item.id
-              ? 'Selected'
-              : 'Select'}
-          </Text>
-        </TouchableOpacity>
+        <FlightCard
+        flight={item}
+        isSelected={isReturn ? selectedReturnFlightId === item.id : selectedFlightId === item.id}
+        onSelect={isReturn ? handleSelectReturnFlight : handleSelectOutboundFlight}
+        isReturn={isReturn}
+        />
       )}
     />
   );
@@ -81,8 +70,8 @@ const SearchResults = () => {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Loading flights...</Text>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+        <Text style={[styles.label, { fontSize: FONT_SIZES.medium }]}>Loading flights...</Text>
       </View>
     );
   }
@@ -90,11 +79,11 @@ const SearchResults = () => {
   return (
     <View style={styles.container}>
       <ProgressHeader currentStep={currentStep} /> {/* Progress header */}
-      <Text style={styles.header}>Available Flights</Text>
-      <Text style={styles.subHeader}>Outbound Flights</Text>
+      <Text style={[styles.title, { fontSize: FONT_SIZES.xLarge }]}>Available Flights</Text>
+      <Text style={[styles.subHeader, { fontSize: FONT_SIZES.large }]}>Outbound Flights</Text>
       {renderFlightList(flights)} {/* Outbound flights */}
-      <Text style={styles.subHeader}>Return Flights</Text>
-      {renderFlightList(returnFlights, true)} {/* Return flights */}
+      {guestData.booking.flightType === 'twoWay' && (<Text style={[styles.subHeader, { fontSize: FONT_SIZES.large }]}>Return Flights</Text>)}
+      {guestData.booking.flightType === 'twoWay' && renderFlightList(returnFlights, true)} {/* Return flights */}
       <Footer
         totalCost={guestData.payment.totalCost}
         isFlightSelected={!!selectedFlight}
@@ -103,41 +92,5 @@ const SearchResults = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  header: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  subHeader: {
-    fontSize: 18,
-    marginTop: 20,
-    marginBottom: 10,
-    fontWeight: 'bold',
-  },
-  flightItem: {
-    padding: 15,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    marginBottom: 15,
-  },
-  selectedFlightItem: {
-    backgroundColor: '#d0f0c0',
-  },
-  selectText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#007bff',
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default SearchResults;

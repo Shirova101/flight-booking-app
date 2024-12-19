@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import FlightBookingForm from '../components/FlightBookingForm';
-import CheckInForm from '../components/CheckInForm';
-import ManageBookingForm from '../components/ManageBookingForm';
-// Form components for Flight Booking, Check-In, and Manage Booking
+import FlightBookingForm from './flightBooking/FlightBookingForm';
+import CheckInForm from './checkIn/CheckInForm';
+import ManageBookingForm from './manageBooking/ManageBookingForm';
+import styles from '../styles/pages/HomeScreen.styles'
 
 
 const HomeScreen = () => {
@@ -59,7 +59,7 @@ const HomeScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles_1 = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
